@@ -23,9 +23,12 @@ llm_toy/
 ├── notebooks/             # Jupyter notebooks for learning
 │   ├── 01_pytorch_setup.ipynb        # GPU verification
 │   ├── 02_simple_llm_demo.ipynb      # Basic LLM usage
-│   ├── 03_training_demo.ipynb        # Training from scratch
-│   ├── 04_fine_tuning_demo.ipynb     # Fine-tuning pre-trained models
-│   └── 05_attention_visualization.ipynb  # Understanding attention
+│   ├── 03_training_demo.ipynb        # Training on a tiny dataset (CN tutorial)
+│   ├── 04_fine_tuning_demo.ipynb     # Small-scale fine-tuning (CN tutorial)
+│   ├── 05_attention_visualization.ipynb  # Attention visualization (CN tutorial)
+│   ├── 06_tokenization_basics.ipynb  # Train a BPE tokenizer (CN tutorial)
+│   ├── 07_rag_intro.ipynb            # RAG with TF-IDF retriever (CN)
+│   └── 08_evaluation_metrics.ipynb   # Perplexity/BLEU/ROUGE basics (CN)
 ├── configs/               # Configuration files
 │   └── training_config.json
 ├── data/                  # Data storage
@@ -149,3 +152,7 @@ This project is for educational purposes. Feel free to use and modify as needed.
 **Happy Learning! 🎉**
 
 Start with `notebooks/01_pytorch_setup.ipynb` and work your way through the notebooks to build your LLM knowledge step by step.
+
+---
+
+For a fully Chinese learning path and hands-on notes, see: `llm_toy/README_CN.md`.

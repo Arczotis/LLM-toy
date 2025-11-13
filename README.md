@@ -34,6 +34,12 @@ Work through the notebooks in this order:
 1. `llm_toy/notebooks/00_setup_troubleshooting.ipynb` - Fix any GPU issues
 2. `llm_toy/notebooks/01_pytorch_setup.ipynb` - Verify your setup
 3. `llm_toy/notebooks/02_simple_llm_demo.ipynb` - Basic LLM usage
+4. `llm_toy/notebooks/03_training_demo.ipynb` - 中文教程：小数据训练流程
+5. `llm_toy/notebooks/04_fine_tuning_demo.ipynb` - 中文教程：指令风格小规模Fine-tuning
+6. `llm_toy/notebooks/05_attention_visualization.ipynb` - 中文教程：Attention可视化
+7. `llm_toy/notebooks/06_tokenization_basics.ipynb` - 中文教程：从零训练BPE Tokenizer
+8. `llm_toy/notebooks/07_rag_intro.ipynb` - 中文教程：RAG检索增强（TF-IDF Retriever）
+9. `llm_toy/notebooks/08_evaluation_metrics.ipynb` - 中文教程：Perplexity/BLEU/ROUGE评测基础
 
 ## 📚 LLM Toy Project Structure
 
@@ -165,3 +171,7 @@ All notebooks will automatically fall back to CPU mode. Training will be slower,
 **🎉 Your LLM learning journey starts here!**
 
 Don't let the GPU issues discourage you - start with CPU mode and upgrade when you resolve the driver issues. The concepts you'll learn are identical!
+
+---
+
+中文学习导航：请参考 `llm_toy/README_CN.md` 和 `llm_toy/notebooks/03~06` 系列中文Notebook（注释与讲解为中文，专有名词保持英文）。
