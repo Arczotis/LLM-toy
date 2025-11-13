@@ -17,6 +17,10 @@ from model import SimpleGPTModel
 from utils import set_seed, get_device, print_gpu_memory
 from trainer import create_sample_data
 from trainer import LLMTrainer, SimpleDataset, init_wandb
+try:
+    from online_model import create_online_model
+except Exception:
+    create_online_model = None  # type: ignore
 
 
 def test_setup():
@@ -74,6 +78,35 @@ def test_text_generation():
     return True
 
 
+def test_online_generation(provider: str | None = None, model_id: str | None = None) -> bool:
+    """Test text generation via online provider (OpenRouter/SiliconFlow)."""
+    print("\n🌐 Testing Online Text Generation")
+    print("=" * 50)
+
+    if create_online_model is None:
+        print("❌ Online model client not available")
+        return False
+
+    try:
+        print("Initializing online model client...")
+        online = create_online_model(model=model_id, provider=provider)
+
+        print("\nProvider/Model:")
+        print(online.get_model_info())
+
+        prompt = "用一句话描述一下这个项目的用途。"
+        print(f"\n📝 Prompt: {prompt}")
+        out = online.generate_text(prompt, max_length=80, temperature=0.7)
+        print(f"   Generated: {out}")
+
+        print("\n✅ Online generation test passed!")
+        return True
+    except Exception as e:
+        print(f"❌ Online generation test failed: {e}")
+        print("提示: 请在 llm_toy/configs/llm_api_config.json 中填写 API Key，或设置环境变量 OPENROUTER_API_KEY / SILICONFLOW_API_KEY。")
+        return False
+
+
 def test_training_setup():
     """Test training setup with sample data"""
     print("\n🏋️ Testing Training Setup")
@@ -113,10 +146,12 @@ def test_training_setup():
 def main():
     """Main function"""
     parser = argparse.ArgumentParser(description="LLM Toy Project Main Script")
-    parser.add_argument("--test", choices=["setup", "generation", "training", "all"], 
+    parser.add_argument("--test", choices=["setup", "generation", "training", "online", "all"], 
                        default="all", help="What to test")
     parser.add_argument("--seed", type=int, default=42, help="Random seed")
     parser.add_argument("--no-wandb", action="store_true", help="Disable wandb")
+    parser.add_argument("--provider", type=str, default=None, help="Online provider: openrouter or siliconflow")
+    parser.add_argument("--model-id", type=str, default=None, help="Online provider model id")
     
     args = parser.parse_args()
     
@@ -146,6 +181,11 @@ def main():
     if args.test in ["training", "all"]:
         total_tests += 1
         if test_training_setup():
+            tests_passed += 1
+
+    if args.test in ["online", "all"]:
+        total_tests += 1
+        if test_online_generation(provider=args.provider, model_id=args.model_id):
             tests_passed += 1
     
     # Summary

@@ -1,0 +1,14 @@
+{
+  "provider": "openrouter",
+  "openrouter": {
+    "api_key": "CHANGE_ME_OPENROUTER",
+    "base_url": "https://openrouter.ai/api/v1",
+    "default_model": "openrouter/auto"
+  },
+  "siliconflow": {
+    "api_key": "CHANGE_ME_SILICONFLOW",
+    "base_url": "https://api.siliconflow.cn/v1",
+    "default_model": "" 
+  }
+}
+
