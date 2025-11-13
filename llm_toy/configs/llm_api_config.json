@@ -9,6 +9,10 @@
     "api_key": "sk-hfbvxsbkfzzlvetpbbvsluuzshkiqfyzyjoaohjryhcaiqpy",
     "base_url": "https://api.siliconflow.cn/v1",
     "default_model": "Pro/deepseek-ai/DeepSeek-V3.2-Exp"
+  },
+  "fallback": {
+    "prefer_offline": true,
+    "hf_probe_timeout": 1.5,
+    "hf_probe_url": "https://huggingface.co/gpt2/resolve/main/config.json"
   }
 }
-

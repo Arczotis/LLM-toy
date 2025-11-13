@@ -188,7 +188,7 @@ def create_model(model_name: str = "gpt2", force_offline: bool = False) -> Optio
     
     # Try to import the real SimpleGPTModel
     try:
-        from .model import SimpleGPTModel as RealSimpleGPTModel
+        from model import SimpleGPTModel as RealSimpleGPTModel
         
         print(f"🌐 Attempting to load real GPT-2 model: {model_name}")
         

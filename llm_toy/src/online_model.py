@@ -217,14 +217,36 @@ class SmartTextModel:
     def _ensure_fallback(self):
         if self._fallback_model is None:
             # Import here to avoid circular import at module load time
-            from .offline_model import create_model as create_local_model
+            from offline_model import create_model as create_local_model
 
-            # Try HF GPT-2 then offline demo
-            try:
-                self._fallback_model = create_local_model("gpt2", force_offline=False)
-            except Exception:
-                # Last resort: forced offline demo
+            # Load config to decide fallback preference
+            cfg = _load_api_config()
+            fb = (cfg.get("fallback") or {})
+            prefer_offline = bool(fb.get("prefer_offline", True))
+            probe_timeout = float(fb.get("hf_probe_timeout", 1.5))
+            probe_url = str(fb.get("hf_probe_url", "https://huggingface.co/gpt2/resolve/main/config.json"))
+
+            def _hf_reachable() -> bool:
+                try:
+                    requests.head(probe_url, timeout=probe_timeout)
+                    return True
+                except Exception:
+                    return False
+
+            # Strategy: prefer offline to avoid long HF retries if environment blocks HF
+            if prefer_offline:
                 self._fallback_model = create_local_model("gpt2", force_offline=True)
+                return
+
+            # Otherwise, only try HF if a quick probe succeeds, else go offline
+            if _hf_reachable():
+                try:
+                    self._fallback_model = create_local_model("gpt2", force_offline=False)
+                    return
+                except Exception:
+                    pass
+            # Last resort: forced offline demo
+            self._fallback_model = create_local_model("gpt2", force_offline=True)
 
     def generate_text(self, prompt: str, max_length: int = 200, temperature: float = 0.7, top_p: float = 1.0, do_sample: bool = True) -> str:
         if self._online is not None and not self._used_fallback:
