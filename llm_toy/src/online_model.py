@@ -195,3 +195,66 @@ def create_online_model(
     """Factory to create an OnlineChatModel using config/env."""
     return OnlineChatModel(model=model, provider=provider, system_prompt=system_prompt)
 
+
+class SmartTextModel:
+    """
+    Try online provider first; on any provider/network error, fall back to
+    Hugging Face GPT-2 (if available) or the offline demo model.
+    Maintains the same generate_text/get_model_info API shape.
+    """
+
+    def __init__(self, model: Optional[str] = None, provider: Optional[str] = None, system_prompt: Optional[str] = None):
+        self._online_err: Optional[str] = None
+        self._used_fallback = False
+        self._fallback_model = None  # created lazily
+        try:
+            self._online = OnlineChatModel(model=model, provider=provider, system_prompt=system_prompt)
+        except Exception as e:
+            # Creation failure (e.g., missing API key). Defer to fallback on first call.
+            self._online = None
+            self._online_err = str(e)
+
+    def _ensure_fallback(self):
+        if self._fallback_model is None:
+            # Import here to avoid circular import at module load time
+            from .offline_model import create_model as create_local_model
+
+            # Try HF GPT-2 then offline demo
+            try:
+                self._fallback_model = create_local_model("gpt2", force_offline=False)
+            except Exception:
+                # Last resort: forced offline demo
+                self._fallback_model = create_local_model("gpt2", force_offline=True)
+
+    def generate_text(self, prompt: str, max_length: int = 200, temperature: float = 0.7, top_p: float = 1.0, do_sample: bool = True) -> str:
+        if self._online is not None and not self._used_fallback:
+            try:
+                return self._online.generate_text(prompt, max_length=max_length, temperature=temperature, top_p=top_p, do_sample=do_sample)
+            except Exception as e:
+                # Record and fall back
+                self._online_err = str(e)
+                self._used_fallback = True
+
+        self._ensure_fallback()
+        return self._fallback_model.generate_text(prompt, max_length=max_length, temperature=temperature, do_sample=do_sample)  # type: ignore[union-attr]
+
+    def get_model_info(self) -> Dict[str, Any]:
+        if not self._used_fallback and self._online is not None:
+            info = self._online.get_model_info()
+            if self._online_err:
+                info = {**info, "warning": f"online init note: {self._online_err}"}
+            return info
+        self._ensure_fallback()
+        info = self._fallback_model.get_model_info()  # type: ignore[union-attr]
+        if self._online_err:
+            info = {**info, "fallback_reason": self._online_err}
+        return info
+
+
+def create_smart_model(
+    model: Optional[str] = None,
+    provider: Optional[str] = None,
+    system_prompt: Optional[str] = None,
+) -> SmartTextModel:
+    """Create a model that prefers online and falls back automatically."""
+    return SmartTextModel(model=model, provider=provider, system_prompt=system_prompt)

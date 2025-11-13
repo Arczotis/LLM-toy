@@ -1,14 +1,14 @@
 {
   "provider": "openrouter",
   "openrouter": {
-    "api_key": "CHANGE_ME_OPENROUTER",
+    "api_key": "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",
     "base_url": "https://openrouter.ai/api/v1",
-    "default_model": "openrouter/auto"
+    "default_model": "openrouter/polaris-alpha"
   },
   "siliconflow": {
-    "api_key": "CHANGE_ME_SILICONFLOW",
+    "api_key": "sk-hfbvxsbkfzzlvetpbbvsluuzshkiqfyzyjoaohjryhcaiqpy",
     "base_url": "https://api.siliconflow.cn/v1",
-    "default_model": "" 
+    "default_model": "Pro/deepseek-ai/DeepSeek-V3.2-Exp"
   }
 }
 

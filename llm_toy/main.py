@@ -18,9 +18,10 @@ from utils import set_seed, get_device, print_gpu_memory
 from trainer import create_sample_data
 from trainer import LLMTrainer, SimpleDataset, init_wandb
 try:
-    from online_model import create_online_model
+    from online_model import create_online_model, create_smart_model
 except Exception:
     create_online_model = None  # type: ignore
+    create_smart_model = None  # type: ignore
 
 
 def test_setup():
@@ -83,27 +84,27 @@ def test_online_generation(provider: str | None = None, model_id: str | None = N
     print("\n🌐 Testing Online Text Generation")
     print("=" * 50)
 
-    if create_online_model is None:
+    if create_smart_model is None:
         print("❌ Online model client not available")
         return False
 
     try:
-        print("Initializing online model client...")
-        online = create_online_model(model=model_id, provider=provider)
-
-        print("\nProvider/Model:")
-        print(online.get_model_info())
+        print("Initializing smart (online+fallback) client...")
+        online = create_smart_model(model=model_id, provider=provider)
 
         prompt = "用一句话描述一下这个项目的用途。"
         print(f"\n📝 Prompt: {prompt}")
         out = online.generate_text(prompt, max_length=80, temperature=0.7)
         print(f"   Generated: {out}")
 
+        print("\nProvider/Model (after call):")
+        print(online.get_model_info())
+
         print("\n✅ Online generation test passed!")
         return True
     except Exception as e:
         print(f"❌ Online generation test failed: {e}")
-        print("提示: 请在 llm_toy/configs/llm_api_config.json 中填写 API Key，或设置环境变量 OPENROUTER_API_KEY / SILICONFLOW_API_KEY。")
+        print("提示: 如为Provider错误(如 5xx)或模型不可用，请更换模型ID(如 openrouter/auto)或切换provider；该测试已内置自动回退到本地/离线模型。")
         return False
 
 
