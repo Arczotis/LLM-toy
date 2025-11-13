@@ -1,0 +1,22 @@
+{
+  "model_name": "gpt2",
+  "max_length": 128,
+  "batch_size": 8,
+  "learning_rate": 5e-5,
+  "num_epochs": 3,
+  "warmup_steps": 100,
+  "save_dir": "./checkpoints",
+  "seed": 42,
+  "temperature": 0.7,
+  "top_k": 50,
+  "top_p": 0.9,
+  "device": "cuda",
+  "wandb_project": "llm-toy",
+  "log_interval": 10,
+  "eval_interval": 100,
+  "save_interval": 500,
+  "gradient_accumulation_steps": 1,
+  "max_grad_norm": 1.0,
+  "weight_decay": 0.01,
+  "adam_epsilon": 1e-8
+}
