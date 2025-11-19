@@ -1,4 +1,4 @@
-# JupyterProject - 大语言模型学习环境 (RTX 2070 优化版)
+# JupyterProject - 大语言模型学习环境
 
 ## 🎯 项目概述
 
