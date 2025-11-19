@@ -43,7 +43,7 @@ def _load_api_config() -> Dict[str, Any]:
         "siliconflow": {
             "api_key": os.getenv("SILICONFLOW_API_KEY", ""),
             "base_url": "https://api.siliconflow.cn/v1",
-            "default_model": "",
+            "default_model": "deepseek-ai/DeepSeek-V3.2-Exp",
         },
     }
 

@@ -1,14 +1,14 @@
 {
-  "provider": "openrouter",
+  "provider": "siliconflow",
   "openrouter": {
     "api_key": "你的apikey",
     "base_url": "https://openrouter.ai/api/v1",
-    "default_model": "openrouter/polaris-alpha"
+    "default_model": "openrouter/auto"
   },
   "siliconflow": {
     "api_key": "你的apikey",
     "base_url": "https://api.siliconflow.cn/v1",
-    "default_model": "Pro/deepseek-ai/DeepSeek-V3.2-Exp"
+    "default_model": "deepseek-ai/DeepSeek-V3.2-Exp"
   },
   "fallback": {
     "prefer_offline": true,
